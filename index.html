@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokemon GO CP Predictor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="map-underlay" aria-hidden="true">
+      <div class="map-roads road-a"></div>
+      <div class="map-roads road-b"></div>
+      <div class="map-roads road-c"></div>
+      <div class="map-park park-a"></div>
+      <div class="map-park park-b"></div>
+      <div class="map-ring ring-a"></div>
+      <div class="map-ring ring-b"></div>
+      <div class="map-stop stop-a"></div>
+      <div class="map-stop stop-b"></div>
+      <div class="map-stop stop-c"></div>
+    </div>
+    <div class="page-shell">
+      <nav class="top-tabs" aria-label="Sections">
+        <button type="button" class="top-tab active" data-tab="main">Home</button>
+        <button type="button" class="top-tab" data-tab="evolution">Evolution</button>
+        <button type="button" class="top-tab" data-tab="purification">Purification</button>
+        <button type="button" class="top-tab" data-tab="level">Level Check</button>
+      </nav>
+
+      <header id="hero" class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Pokemon GO Field Tools</p>
+          <h1>Predict evolution CP and purified CP before you commit.</h1>
+          <p class="hero-text">
+            Open a branch, enter the Pokemon you caught, and preview what
+            evolution, purification, or a level check would look like before
+            you spend candy or dust.
+          </p>
+        </div>
+      </header>
+
+      <main>
+        <section id="entry-panel" class="panel entry-panel">
+          <div class="entry-heading">
+            <p class="eyebrow">Choose A Path</p>
+            <h2>What do you want to predict?</h2>
+            <p class="hero-text">
+              Start by choosing a calculator. We’ll tailor the form and results
+              to just that prediction so the page stays simple.
+            </p>
+          </div>
+
+          <div class="mode-grid">
+            <button type="button" class="mode-card" data-mode="evolution">
+              <span class="mode-kicker">Evolution</span>
+              <strong>Predict the CP after evolving a Pokemon.</strong>
+              <span class="mode-copy"
+                >Keeps the same level and IVs, then projects every immediate
+                evolution.</span
+              >
+            </button>
+
+            <button type="button" class="mode-card" data-mode="purification">
+              <span class="mode-kicker">Purification</span>
+              <strong>Predict the CP after purifying a Shadow Pokemon.</strong>
+              <span class="mode-copy"
+                >Applies the +2 IV boost and the purification level floor.</span
+              >
+            </button>
+
+            <button type="button" class="mode-card" data-mode="level">
+              <span class="mode-kicker">Level Check</span>
+              <strong>Estimate a Pokemon's level from its current CP.</strong>
+              <span class="mode-copy"
+                >Use IVs for a tighter estimate, or skip them to see the likely
+                level range.</span
+              >
+            </button>
+          </div>
+        </section>
+
+        <section id="calculator-panel" class="layout hidden">
+          <section class="panel form-panel">
+            <div class="form-header">
+              <div>
+                <p class="eyebrow">Calculator</p>
+                <h2 id="form-title">Pokemon Details</h2>
+              </div>
+              <button type="button" id="back-button" class="secondary ghost-button">
+                Return to Main Screen
+              </button>
+            </div>
+
+            <form id="predictor-form" onsubmit="return false;">
+              <label>
+                <span>Pokemon species</span>
+                <input
+                  id="species-search"
+                  list="species-list"
+                  name="species"
+                  placeholder="Search for Pikachu, Dratini, Eevee..."
+                  autocomplete="off"
+                  required
+                />
+                <datalist id="species-list"></datalist>
+              </label>
+
+              <div class="field-grid">
+                <label>
+                  <span>Current CP</span>
+                  <input
+                    id="current-cp"
+                    name="currentCp"
+                    type="number"
+                    min="10"
+                    step="1"
+                    placeholder="e.g. 742"
+                    required
+                  />
+                </label>
+
+                <label id="trainer-level-wrapper">
+                  <span>Trainer level for purification</span>
+                  <input
+                    id="trainer-level"
+                    name="trainerLevel"
+                    type="number"
+                    min="1"
+                    max="50"
+                    step="1"
+                    placeholder="Optional, default 25+"
+                  />
+                </label>
+              </div>
+
+              <label id="iv-toggle-wrapper" class="toggle-row hidden">
+                <input id="use-ivs" name="useIvs" type="checkbox" checked />
+                <span>Use IVs for a more accurate level estimate</span>
+              </label>
+
+              <div id="iv-grid" class="iv-grid">
+                <label>
+                  <span>Attack IV</span>
+                  <input
+                    id="attack-iv"
+                    name="attackIv"
+                    type="number"
+                    min="0"
+                    max="15"
+                    step="1"
+                    placeholder="0-15"
+                  />
+                </label>
+
+                <label>
+                  <span>Defense IV</span>
+                  <input
+                    id="defense-iv"
+                    name="defenseIv"
+                    type="number"
+                    min="0"
+                    max="15"
+                    step="1"
+                    placeholder="0-15"
+                  />
+                </label>
+
+                <label>
+                  <span>HP IV</span>
+                  <input
+                    id="stamina-iv"
+                    name="staminaIv"
+                    type="number"
+                    min="0"
+                    max="15"
+                    step="1"
+                    placeholder="0-15"
+                  />
+                </label>
+              </div>
+
+              <div class="button-row">
+                <button type="button" id="predict-button">Predict CP</button>
+                <button type="button" id="fill-demo" class="secondary">
+                  Load example
+                </button>
+              </div>
+            </form>
+
+            <p id="calculator-hint" class="hint">
+              Tip: if multiple half-levels can produce the same CP, the app
+              shows the closest match and tells you when the result is
+              ambiguous.
+            </p>
+          </section>
+
+          <section class="panel results-panel">
+            <div class="results-header">
+              <div>
+                <p class="eyebrow">Prediction</p>
+                <h2 id="results-title">Waiting for a Pokemon...</h2>
+              </div>
+              <div class="level-badge" id="level-badge">Level unknown</div>
+            </div>
+
+            <div id="messages" class="messages" aria-live="polite"></div>
+
+            <div class="results-grid">
+              <article id="evolution-card" class="result-card">
+                <h3>Evolution CP</h3>
+                <div id="evolution-results" class="card-content empty-state">
+                  Enter a Pokemon to see its immediate evolutions.
+                </div>
+              </article>
+
+              <article id="purify-card" class="result-card">
+                <h3>Purified CP</h3>
+                <div id="purify-results" class="card-content empty-state">
+                  Shadow Pokemon projections will appear here.
+                </div>
+              </article>
+
+              <article id="level-card" class="result-card">
+                <h3>Pokemon Level</h3>
+                <div id="level-results" class="card-content empty-state">
+                  Level estimates will appear here.
+                </div>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
+
+    </div>
+
+    <script src="./data/pokemon_stats.js" defer></script>
+    <script src="./data/pokemon_evolutions.js" defer></script>
+    <script src="./data/cp_multiplier.js" defer></script>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
