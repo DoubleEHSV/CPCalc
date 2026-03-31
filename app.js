@@ -69,12 +69,16 @@ async function bootstrap() {
     populateSpeciesList();
     state.dataLoaded = true;
 
-    elements.dataStatus.textContent = `${state.speciesOptions.length} species ready`;
+    if (elements.dataStatus) {
+      elements.dataStatus.textContent = `${state.speciesOptions.length} species ready`;
+    }
     setMessage("Live Pokemon GO data loaded. You can start predicting now.");
   } catch (error) {
     console.error(error);
     state.dataLoaded = false;
-    elements.dataStatus.textContent = "Data failed to load";
+    if (elements.dataStatus) {
+      elements.dataStatus.textContent = "Data failed to load";
+    }
     setMessage(
       "The app could not load Pokemon GO data from PoGoAPI. Check your connection and refresh."
     );
